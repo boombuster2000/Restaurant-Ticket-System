@@ -43,14 +43,27 @@ def print_orders(orders):
     for order in orders:
          print(f"{order}\t\t\t {orders[order]['Done']} \t\t {orders[order]['Ailse']}")
 
-def menu():
+def prompt(message):
+    print(message)
+    sleep(1.5)
+
+def print_menu():
     print("Menu")
     print("1) Get Ailse")
     print("2) Change Order Status")
     print("3) Exit")
 
-    option = int(input(">> "))
-    return option
+def get_integer_input(message, valid_options = []):
+    while True:
+        try:
+            selected_option = int(input(message))
+            if len(valid_options) == 0: return selected_option
+            if selected_option in valid_options: return selected_option
+
+        except:
+            prompt("Must be a number!")
+        
+        prompt("Enter a valid option!")
 
 orders = load_orders()
 ailses = load_ailses()
@@ -59,17 +72,18 @@ while True:
     update_ailses(ailses, orders)
     clear_screen()
     print_orders(orders)
-    option = menu()
+    print_menu()
+    option = get_integer_input(">> ", [1,2,3])
 
     if option == 1:
-        order_number = int(input("Order Number: "))
+        order_number = get_integer_input("Order Number: ")
         ailse = get_ailse(ailses)
         ailses[str(ailse)] += 1
         orders[order_number] = {"Done": False, "Ailse": ailse}
         print(f"Ailse: {ailse}")
 
     elif option == 2:
-        order_number = int(input("Order Number: "))
+        order_number = get_integer_input("Order Number: ")
         if orders[order_number]["Done"] == False: orders[order_number]["Done"] = True
         else: orders[order_number]["Done"] = False
         print(f"Done: {orders[order_number]['Done']}")
