@@ -49,7 +49,7 @@ def prompt(message):
 
 def print_menu():
     print("Menu")
-    print("1) Get Ailse")
+    print("1) Add Order")
     print("2) Change Order Status")
     print("3) Exit")
 
@@ -57,13 +57,22 @@ def get_integer_input(message, valid_options = []):
     while True:
         try:
             selected_option = int(input(message))
-            if len(valid_options) == 0: return selected_option
-            if selected_option in valid_options: return selected_option
+            if selected_option == -1: return selected_option
+            elif len(valid_options) == 0: return selected_option
+            elif selected_option in valid_options: return selected_option
 
         except:
             prompt("Must be a number!")
-        
+            continue
+
         prompt("Enter a valid option!")
+
+def does_order_exists(order_number, orders):
+    order_number = str(order_number)
+    for _order_number in orders.keys():
+        if order_number == _order_number: return True
+
+    return False
 
 orders = load_orders()
 ailses = load_ailses()
@@ -76,14 +85,28 @@ while True:
     option = get_integer_input(">> ", [1,2,3])
 
     if option == 1:
-        order_number = get_integer_input("Order Number: ")
+        while True:
+            order_number = get_integer_input("Order Number: ")
+            if order_number == -1: break
+            elif not does_order_exists(order_number, orders): break
+            else: prompt("Order already exists!")
+
+        if order_number == -1: continue
+        
         ailse = get_ailse(ailses)
         ailses[str(ailse)] += 1
         orders[order_number] = {"Done": False, "Ailse": ailse}
-        print(f"Ailse: {ailse}")
+        print(f"Put order in ailse: {ailse}")
 
     elif option == 2:
-        order_number = get_integer_input("Order Number: ")
+        while True:
+            order_number = get_integer_input("Order Number: ")
+            if order_number == -1: break
+            elif does_order_exists(order_number, orders): break
+            else: prompt("Order does not exist!")
+
+        if order_number == -1: continue
+
         if orders[order_number]["Done"] == False: orders[order_number]["Done"] = True
         else: orders[order_number]["Done"] = False
         print(f"Done: {orders[order_number]['Done']}")
