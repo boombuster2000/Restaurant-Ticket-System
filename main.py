@@ -3,7 +3,6 @@ from time import sleep
 import json
 
 def clear_screen():
-    sleep(1.5)
     system('cls')
 
 def get_ailse(ailses):
@@ -51,7 +50,8 @@ def print_menu():
     print("Menu")
     print("1) Add Order")
     print("2) Change Order Status")
-    print("3) Exit")
+    print("3) Delete Order")
+    print("-1) Exit")
 
 def get_integer_input(message, valid_options = []):
     while True:
@@ -82,36 +82,48 @@ while True:
     clear_screen()
     print_orders(orders)
     print_menu()
-    option = get_integer_input(">> ", [1,2,3])
+    option = get_integer_input(">> ", [1,2,3,4])
 
-    if option == 1:
-        while True:
+    if option == 1: # Add order
+        while True: # Get Order Number and check if exists
             order_number = get_integer_input("Order Number: ")
             if order_number == -1: break
             elif not does_order_exists(order_number, orders): break
             else: prompt("Order already exists!")
-
-        if order_number == -1: continue
+        if order_number == -1: continue # escape input
         
         ailse = get_ailse(ailses)
         ailses[str(ailse)] += 1
         orders[order_number] = {"Done": False, "Ailse": ailse}
-        print(f"Put order in ailse: {ailse}")
+        
+        prompt(f"Put order in ailse: {ailse}")
 
-    elif option == 2:
-        while True:
+    elif option == 2: # Change Order Status
+        while True: # Get Order Number and check if exists
             order_number = get_integer_input("Order Number: ")
             if order_number == -1: break
             elif does_order_exists(order_number, orders): break
             else: prompt("Order does not exist!")
+        if order_number == -1: continue # escape input
 
-        if order_number == -1: continue
-
+        order_number = str(order_number)
         if orders[order_number]["Done"] == False: orders[order_number]["Done"] = True
         else: orders[order_number]["Done"] = False
-        print(f"Done: {orders[order_number]['Done']}")
+        prompt(f"Done: {orders[order_number]['Done']}")
+    
+    elif option == 3: # Delete Order
+        while True: # Get Order Number and check if exists
+            order_number = get_integer_input("Order Number: ")
+            if order_number == -1: break
+            elif does_order_exists(order_number, orders): break
+            else: prompt("Order does not exist!")
+        if order_number == -1: continue # escape input
 
-    elif option == 3:
+        orders.pop(str(order_number))
+
+        prompt("Order deleted!")
+        
+    elif option == -1: # Exit
         break
          
     save_orders(orders)
