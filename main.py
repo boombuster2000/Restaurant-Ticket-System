@@ -9,21 +9,21 @@ def clear_screen():
 def get_ailse(ailses):
     smallest_queue_ailse = 1
     for ailse in range(len(list(ailses.keys())), 0, -1):
-            if ailses[str(ailse)] <= ailses[str(smallest_queue_ailse)]: smallest_queue_ailse = ailse
+        if ailses[str(ailse)] <= ailses[str(smallest_queue_ailse)]: smallest_queue_ailse = ailse
 
     return smallest_queue_ailse
 
 def update_ailses(ailses, orders):
     for order in orders:
-            if orders[order]["Done"]: ailses[orders[order]["Ailse"]] = -1
+        if orders[order]["Done"]: ailses[orders[order]["Ailse"]] = -1
     return ailses
 
 def save_orders(orders):
-     with open("orders.json", "w") as f:
+    with open("orders.json", "w") as f:
         f.write(json.dumps(orders,indent=4))
 
 def save_ailses(ailses):
-     with open("ailses.json", "w") as f:
+    with open("ailses.json", "w") as f:
         f.write(json.dumps(ailses,indent=4))
 
 def load_ailses():
@@ -60,21 +60,22 @@ while True:
     clear_screen()
     print_orders(orders)
     option = menu()
-    order_number = int(input("Order Number: "))
 
     if option == 1:
+        order_number = int(input("Order Number: "))
         ailse = get_ailse(ailses)
         ailses[str(ailse)] += 1
         orders[order_number] = {"Done": False, "Ailse": ailse}
         print(f"Ailse: {ailse}")
 
     elif option == 2:
-         if orders[order_number]["Done"] == False: orders[order_number]["Done"] = True
-         else: orders[order_number]["Done"] = False
-         print(f"Done: {orders[order_number]['Done']}")
-         
+        order_number = int(input("Order Number: "))
+        if orders[order_number]["Done"] == False: orders[order_number]["Done"] = True
+        else: orders[order_number]["Done"] = False
+        print(f"Done: {orders[order_number]['Done']}")
+
     elif option == 3:
-         break
+        break
          
     save_orders(orders)
     save_ailses(ailses)
