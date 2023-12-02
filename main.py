@@ -47,6 +47,7 @@ def menu():
     print("Menu")
     print("1) Get Ailse")
     print("2) Change Order Status")
+    print("3) Exit")
 
     option = int(input(">> "))
     return option
@@ -71,6 +72,9 @@ while True:
          if orders[order_number]["Done"] == False: orders[order_number]["Done"] = True
          else: orders[order_number]["Done"] = False
          print(f"Done: {orders[order_number]['Done']}")
+         
+    elif option == 3:
+         break
          
     save_orders(orders)
     save_ailses(ailses)
