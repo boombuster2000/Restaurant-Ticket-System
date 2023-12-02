@@ -10,7 +10,7 @@ def get_ailse(ailses):
     for ailse in range(len(list(ailses.keys())), 0, -1):
         if ailses[str(ailse)] <= ailses[str(smallest_queue_ailse)]: smallest_queue_ailse = ailse
 
-    return smallest_queue_ailse
+    return str(smallest_queue_ailse)
 
 def update_ailses(ailses, orders):
     for order in orders:
@@ -69,7 +69,6 @@ def get_integer_input(message, valid_options = []):
         prompt("Enter a valid option!")
 
 def does_order_exists(order_number, orders):
-    order_number = str(order_number)
     for _order_number in orders.keys():
         if order_number == _order_number: return True
 
@@ -79,7 +78,6 @@ orders = load_orders()
 ailses = load_ailses()
 
 while True:
-    update_ailses(ailses, orders)
     clear_screen()
     print_orders(orders)
     print_menu()
@@ -89,13 +87,14 @@ while True:
         while True: # Get Order Number and check if exists
             order_number = get_integer_input("Order Number: ")
             if order_number == -1: break
-            elif not does_order_exists(order_number, orders): break
+            order_number = str(order_number)
+            if not does_order_exists(order_number, orders): break
             else: prompt("Order already exists!")
         if order_number == -1: continue # escape input
         
         ailse = get_ailse(ailses)
-        ailses[str(ailse)] += 1
-        orders[order_number] = {"Done": False, "Ailse": ailse}
+        ailses[ailse] += 1
+        orders[str(order_number)] = {"Done": False, "Ailse": ailse}
         
         prompt(f"Put order in ailse: {ailse}")
 
@@ -103,27 +102,37 @@ while True:
         while True: # Get Order Number and check if exists
             order_number = get_integer_input("Order Number: ")
             if order_number == -1: break
-            elif does_order_exists(order_number, orders): break
+            order_number = str(order_number)
+            if does_order_exists(order_number, orders): break
             else: prompt("Order does not exist!")
         if order_number == -1: continue # escape input
 
         order_number = str(order_number)
-        if orders[order_number]["Done"] == False: orders[order_number]["Done"] = True
-        else: orders[order_number]["Done"] = False
+        if orders[order_number]["Done"] == False: 
+            orders[order_number]["Done"] = True
+            ailses[orders[order_number]["Ailse"]] -=1
+        else: 
+            orders[order_number]["Done"] = False
+            ailses[orders[order_number]["Ailse"]] +=1
+
         prompt(f"Done: {orders[order_number]['Done']}")
     
     elif option == 3: # Delete Order
         while True: # Get Order Number and check if exists
             order_number = get_integer_input("Order Number: ")
             if order_number == -1: break
-            elif does_order_exists(order_number, orders): break
+            order_number = str(order_number)
+            if does_order_exists(order_number, orders): break
             else: prompt("Order does not exist!")
         if order_number == -1: continue # escape input
 
-        orders.pop(str(order_number))
+        user_confirmation = input("Are you sure? (y/n): ").lower()
+        if user_confirmation == "y": 
+            ailses[orders[order_number]["Ailse"]] -= 1
+            orders.pop(str(order_number))
+            prompt("Order deleted!")
 
-        prompt("Order deleted!")
-    elif option == 4:
+    elif option == 4: # Rest Everything
         user_confirmation = input("Are you sure? (y/n): ").lower()
         if user_confirmation == "y": 
             orders = {}
