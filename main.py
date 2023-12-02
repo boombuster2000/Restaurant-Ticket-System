@@ -51,6 +51,7 @@ def print_menu():
     print("1) Add Order")
     print("2) Change Order Status")
     print("3) Delete Order")
+    print("4) Reset")
     print("-1) Exit")
 
 def get_integer_input(message, valid_options = []):
@@ -122,7 +123,13 @@ while True:
         orders.pop(str(order_number))
 
         prompt("Order deleted!")
-        
+    elif option == 4:
+        user_confirmation = input("Are you sure? (y/n): ").lower()
+        if user_confirmation == "y": 
+            orders = {}
+            ailses = {"1":0, "2":0, "3":0,"4":0, "5":0, "6":0, "7":0}
+            prompt("Everything reset!")
+            
     elif option == -1: # Exit
         break
          
